@@ -48,6 +48,10 @@ Switch, create, adopt, and launch self-contained agent workspaces from a premium
 ![Profile Jedi settings panel](docs/screenshots/pj-settings-panel.png)
 *Seven-section settings: General, Appearance, Console, Shortcuts, Integrations, Data, and Advanced.*
 
+### Command Palette
+![Profile Jedi command palette Ctrl+K](docs/screenshots/pj-command-palette.png)
+*Fuzzy search to switch profiles, create new, or adopt an existing folder — `Ctrl+K`.*
+
 ---
 
 ## Why Profile Jedi?
