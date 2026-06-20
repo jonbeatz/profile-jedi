@@ -5,6 +5,7 @@
 > run it, and how to extend it.** Read this first before touching the project.
 
 - **App name:** Profile Jedi
+- **GitHub:** https://github.com/jonbeatz/profile-jedi
 - **App root:** `D:\Hermes\apps\profile-jedi`
 - **Backend root:** `D:\Hermes\custom-scriptz\` (profile-switcher + google-api)
 - **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · shadcn/Base UI · Motion · SWR · sonner

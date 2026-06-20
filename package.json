@@ -1,7 +1,28 @@
 {
   "name": "profile-jedi",
   "version": "1.0.0",
+  "description": "Local control panel for managing Hermes AI-agent profiles (Profile Jedi)",
   "private": true,
+  "author": "Jon Beatz <createmystudiochannel@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jonbeatz/profile-jedi.git"
+  },
+  "homepage": "https://github.com/jonbeatz/profile-jedi#readme",
+  "bugs": {
+    "url": "https://github.com/jonbeatz/profile-jedi/issues"
+  },
+  "keywords": [
+    "hermes",
+    "profile-switcher",
+    "profile-jedi",
+    "nextjs",
+    "powershell",
+    "local-first",
+    "ai-agent",
+    "desktop"
+  ],
   "scripts": {
     "dev": "next dev -H 127.0.0.1 -p 7780",
     "build": "next build",
