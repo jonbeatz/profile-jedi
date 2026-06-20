@@ -3,6 +3,8 @@
 **A local-first control panel for managing Hermes AI-agent profiles.**  
 Switch, create, adopt, and launch self-contained agent workspaces from a premium Next.js dashboard — with full PowerShell backend transparency, service health monitoring, and tray-based lifecycle control.
 
+![Profile Jedi — main dashboard](docs/screenshots/pj-dashboard-main.png)
+
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
 [![TypeScript 5.7](https://img.shields.io/badge/TypeScript-5.7-blue?logo=typescript)](https://www.typescriptlang.org/)
@@ -29,6 +31,26 @@ Switch, create, adopt, and launch self-contained agent workspaces from a premium
 | **Backend** | `Switch-Hermes-Profile.ps1` + Google API + Kanban stack scripts |
 | **API routes** | 15 Route Handlers for full local control |
 | **Status** | Production-ready for local desktop use |
+
+---
+
+## Screenshots
+
+### Profile Command Center
+![Profile Jedi dashboard — profiles, detail panel, J.A.R.V.I.S. footer](docs/screenshots/pj-dashboard-main.png)
+*Known profiles sidebar, workspace/CLI/mem0 paths, quick actions, and live PowerShell command preview.*
+
+### Settings & Integrations
+![Profile Jedi settings panel](docs/screenshots/pj-settings-panel.png)
+*Seven-section settings: General, Appearance, Console, Shortcuts, Integrations, Data, and Advanced.*
+
+### Extras & TaskBoard Tools
+![Profile Jedi Extras menu — TaskBoard, Kanban, Dashboard](docs/screenshots/pj-extras-menu.png)
+*Per-project TaskBoard deep-links, Hermes Kanban, Dashboard, and Kanban stack control.*
+
+### Command Palette
+![Profile Jedi command palette Ctrl+K](docs/screenshots/pj-command-palette.png)
+*Fuzzy search to switch profiles, create new, or adopt an existing folder — `Ctrl+K`.*
 
 ---
 
