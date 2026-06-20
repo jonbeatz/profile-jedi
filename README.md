@@ -40,17 +40,13 @@ Switch, create, adopt, and launch self-contained agent workspaces from a premium
 ![Profile Jedi dashboard — profiles, detail panel, J.A.R.V.I.S. footer](docs/screenshots/pj-dashboard-main.png)
 *Known profiles sidebar, workspace/CLI/mem0 paths, quick actions, and live PowerShell command preview.*
 
-### Settings & Integrations
-![Profile Jedi settings panel](docs/screenshots/pj-settings-panel.png)
-*Seven-section settings: General, Appearance, Console, Shortcuts, Integrations, Data, and Advanced.*
-
 ### Extras & TaskBoard Tools
 ![Profile Jedi Extras menu — TaskBoard, Kanban, Dashboard](docs/screenshots/pj-extras-menu.png)
 *Per-project TaskBoard deep-links, Hermes Kanban, Dashboard, and Kanban stack control.*
 
-### Command Palette
-![Profile Jedi command palette Ctrl+K](docs/screenshots/pj-command-palette.png)
-*Fuzzy search to switch profiles, create new, or adopt an existing folder — `Ctrl+K`.*
+### Settings & Integrations
+![Profile Jedi settings panel](docs/screenshots/pj-settings-panel.png)
+*Seven-section settings: General, Appearance, Console, Shortcuts, Integrations, Data, and Advanced.*
 
 ---
 
