@@ -14,8 +14,8 @@ Final authority for this repository. When docs conflict, **this file wins**, the
 1. **Local-first & safe** — PowerShell via `execFile` (no shell-string injection). Destructive actions use confirm dialogs. Dry-Run mode must remain available.
 2. **Slug is immutable** — Profile `slug` is the identity key (CLI home, mem0 collection). UI edits display name, description, path, and `boardId` only.
 3. **Tray survives app** — Lifecycle restart goes through the tray supervisor on port **7781**, not the app on **7780**.
-4. **No secrets in git** — API keys and `.env*` stay local. Google API keys live in `D:\Hermes\custom-scriptz\google-api\.env.local`.
-5. **Backend is external** — `Switch-Hermes-Profile.ps1` and sibling scripts live under `D:\Hermes\custom-scriptz\`. This repo is the UI + API layer.
+4. **No secrets in git** — API keys and `.env*` stay local. Google API keys live in `D:\Hermes\projects\_core-scripts\google-api\.env.local`.
+5. **Backend is external** — `Switch-Hermes-Profile.ps1` and sibling scripts live under `D:\Hermes\projects\_core-scripts\`. This repo is the UI + API layer.
 
 ## Source-of-truth order (agents)
 

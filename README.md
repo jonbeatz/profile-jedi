@@ -77,7 +77,7 @@ Historically, Hermes profiles were switched from PowerShell. Profile Jedi wraps 
 
 - **Node.js** 20+ and **pnpm** (or npm)
 - **Windows 10/11** with PowerShell 5.1+
-- **Hermes** profile-switcher backend at `D:\Hermes\custom-scriptz\profile-switcher\` (or set `HERMES_ROOT` / `PJ_SWITCHER_SCRIPT`)
+- **Hermes** profile-switcher backend at `D:\Hermes\projects\_core-scripts\profile-switcher\` (or set `HERMES_ROOT` / `PJ_SWITCHER_SCRIPT`)
 
 ### Install & run
 
@@ -176,7 +176,7 @@ The browser never runs PowerShell directly. Route Handlers call `lib/server/ps.t
 ## Related projects
 
 - **[MyStudioChannel](https://github.com/jonbeatz/MyStudioChannel)** — creator platform (separate Hermes profile, `slug: msc`)
-- **Hermes profile-switcher** — lives under `D:\Hermes\custom-scriptz\profile-switcher\` (not in this repo)
+- **Hermes profile-switcher** — lives under `D:\Hermes\projects\_core-scripts\profile-switcher\` (not in this repo)
 
 ---
 

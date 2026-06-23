@@ -37,9 +37,9 @@ Extensions inject attributes like `webcrx=""` on `<html>`. Fixed with `suppressH
 
 | Resource | Path |
 |----------|------|
-| Switcher | `D:\Hermes\custom-scriptz\profile-switcher\Switch-Hermes-Profile.ps1` |
-| Registry | `D:\Hermes\custom-scriptz\profile-switcher\profiles.json` |
-| Google API | `D:\Hermes\custom-scriptz\google-api\scripts\` |
+| Switcher | `D:\Hermes\projects\_core-scripts\profile-switcher\Switch-Hermes-Profile.ps1` |
+| Registry | `D:\Hermes\projects\_core-scripts\profile-switcher\profiles.json` |
+| Google API | `D:\Hermes\projects\_core-scripts\google-api\scripts\` |
 | Kanban | `D:\Cursor_Projectz\MyStudioChannel\scripts\start-kanban-stack.ps1` |
 
 ## Future (v1.1+)

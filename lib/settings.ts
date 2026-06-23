@@ -89,15 +89,15 @@ export const DEFAULT_SETTINGS: Settings = {
     cursorPath: '%LOCALAPPDATA%\\Programs\\cursor\\Cursor.exe',
     executionPolicy: 'Bypass',
     templateSource:
-      'D:\\Hermes\\custom-scriptz\\profile-switcher\\profile-template',
+      'D:\\Hermes\\projects\\_core-scripts\\profile-switcher\\profile-template',
     switcherScript:
-      'D:\\Hermes\\custom-scriptz\\profile-switcher\\Switch-Hermes-Profile.ps1',
+      'D:\\Hermes\\projects\\_core-scripts\\profile-switcher\\Switch-Hermes-Profile.ps1',
     openFoldersWith: 'explorer',
     syncOnLaunch: true,
   },
   data: {
     registryPath:
-      'D:\\Hermes\\custom-scriptz\\profile-switcher\\profiles.json',
+      'D:\\Hermes\\projects\\_core-scripts\\profile-switcher\\profiles.json',
     activeProfileFile: '%APPDATA%\\Hermes\\active-profile.json',
     mem0Path: '%USERPROFILE%\\.mem0',
     apiPort: 7780,

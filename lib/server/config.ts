@@ -5,18 +5,27 @@
 import path from 'node:path'
 
 const HERMES_ROOT = process.env.HERMES_ROOT ?? 'D:\\Hermes'
-
 const SWITCHER_DIR = path.join(
   HERMES_ROOT,
-  'custom-scriptz',
+  'projects',
+  '_core-scripts',
   'profile-switcher',
 )
 
-const GOOGLE_API_DIR = path.join(HERMES_ROOT, 'custom-scriptz', 'google-api')
+const GOOGLE_API_DIR = path.join(
+  HERMES_ROOT,
+  'projects',
+  '_core-scripts',
+  'google-api',
+)
 
-// The Kanban/TaskBoard stack lives in the MSC repo's scripts folder.
-const MSC_ROOT =
-  process.env.MSC_ROOT ?? 'D:\\Cursor_Projectz\\MyStudioChannel'
+// The Kanban/TaskBoard stack lives in the central _core-scripts folder.
+const KANBAN_ROOT = path.join(
+  HERMES_ROOT,
+  'projects',
+  '_core-scripts',
+  'kanban-stack',
+)
 
 export const SERVER_CONFIG = {
   hermesRoot: HERMES_ROOT,
@@ -39,13 +48,13 @@ export const SERVER_CONFIG = {
     ngrokInspectorPort: 4040,
   },
   kanban: {
-    startScript: path.join(MSC_ROOT, 'scripts', 'start-kanban-stack.ps1'),
-    stopScript: path.join(MSC_ROOT, 'scripts', 'stop-kanban-stack.ps1'),
+    startScript: path.join(KANBAN_ROOT, 'start-kanban-stack.ps1'),
+    stopScript: path.join(KANBAN_ROOT, 'stop-kanban-stack.ps1'),
     taskboardPort: 3001,
     kanbanPort: 3005,
     dashboardPort: 9119,
   },
-  // Desktop backend writes these; we read active-profile.json to flag active.
+
   activeProfileFile: path.join(
     process.env.APPDATA ?? '',
     'Hermes',

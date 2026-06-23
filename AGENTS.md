@@ -28,9 +28,9 @@ If you changed lifecycle scripts, also probe `http://localhost:7781/status` when
 | What | Path |
 |------|------|
 | App root | `D:\Hermes\apps\profile-jedi` |
-| Switcher script | `D:\Hermes\custom-scriptz\profile-switcher\Switch-Hermes-Profile.ps1` |
-| Registry | `D:\Hermes\custom-scriptz\profile-switcher\profiles.json` |
-| Google API scripts | `D:\Hermes\custom-scriptz\google-api\scripts\` |
+| Switcher script | `D:\Hermes\projects\_core-scripts\profile-switcher\Switch-Hermes-Profile.ps1` |
+| Registry | `D:\Hermes\projects\_core-scripts\profile-switcher\profiles.json` |
+| Google API scripts | `D:\Hermes\projects\_core-scripts\google-api\scripts\` |
 | Kanban stack | `D:\Cursor_Projectz\MyStudioChannel\scripts\start-kanban-stack.ps1` |
 | Server config | `lib/server/config.ts` (env-overridable) |
 

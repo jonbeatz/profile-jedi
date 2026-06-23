@@ -7,7 +7,7 @@
 - **App name:** Profile Jedi
 - **GitHub:** https://github.com/jonbeatz/profile-jedi
 - **App root:** `D:\Hermes\apps\profile-jedi`
-- **Backend root:** `D:\Hermes\custom-scriptz\` (profile-switcher + google-api)
+- **Backend root:** `D:\Hermes\projects\_core-scripts\` (profile-switcher + google-api)
 - **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · shadcn/Base UI · Motion · SWR · sonner
 - **Runs at:** `http://localhost:7780` (bound to `127.0.0.1` only)
 - **Version:** `1.0.0` (`lib/settings.ts → APP_VERSION`)
@@ -90,8 +90,8 @@ and destructive actions are gated behind confirm dialogs and Dry-Run.
                       ▼                                       │ spawns
       ┌──────────────────────────────────────────────────────▼──────────────┐
       │ Backend PowerShell + Node scripts                                     │
-      │  • D:\Hermes\custom-scriptz\profile-switcher\Switch-Hermes-Profile.ps1│
-      │  • D:\Hermes\custom-scriptz\google-api\scripts\*-google-api-desktop.ps1│
+      │  • D:\Hermes\projects\_core-scripts\profile-switcher\Switch-Hermes-Profile.ps1│
+      │  • D:\Hermes\projects\_core-scripts\google-api\scripts\*-google-api-desktop.ps1│
       │  • D:\Cursor_Projectz\MyStudioChannel\scripts\{start,stop}-kanban-stack.ps1
       └──────────────────────────────────────────────────────────────────────┘
                       │ reads/writes
@@ -177,14 +177,14 @@ package.json                 dev/build/start scripts bind -H 127.0.0.1 -p 7780
 ### Backend (outside the app)
 
 ```
-D:\Hermes\custom-scriptz\profile-switcher\
+D:\Hermes\projects\_core-scripts\profile-switcher\
   Switch-Hermes-Profile.ps1  Core engine: list/switch/new/adopt/launch/sync/update
   create-profile-template.ps1  Scaffolds a new self-contained profile
   create-switcher-shortcut.ps1
   profiles.json              Registry (the source of truth for profiles)
   README.md
 
-D:\Hermes\custom-scriptz\google-api\scripts\
+D:\Hermes\projects\_core-scripts\google-api\scripts\
   start|stop|restart-google-api-desktop.ps1   Lifecycle wrappers
   msc-litellm-*.mjs           LiteLLM/ngrok helpers (install, start, status, verify)
   .env.local                  MSC_LITELLM_MASTER_KEY (read for Vertex probe)
@@ -368,7 +368,7 @@ type Profile = {
 ```
 
 ### Sources of truth
-- **`profiles.json`** (registry) — `D:\Hermes\custom-scriptz\profile-switcher\profiles.json`.
+- **`profiles.json`** (registry) — `D:\Hermes\projects\_core-scripts\profile-switcher\profiles.json`.
   Backed up via `POST /api/registry/backup` → `profiles.backup-<timestamp>.json`.
 - **`active-profile.json`** — `%APPDATA%\Hermes\active-profile.json`, written by the
   Hermes desktop backend; read by `app/api/profiles/route.ts` to flag `active`.
@@ -434,7 +434,7 @@ $e=$null; [System.Management.Automation.Language.Parser]::ParseFile(
   'D:\Hermes\apps\profile-jedi\profile-jedi-tray.ps1',[ref]$null,[ref]$e); $e
 
 # Backend engine direct
-& 'D:\Hermes\custom-scriptz\profile-switcher\Switch-Hermes-Profile.ps1' -Action list -Json
+& 'D:\Hermes\projects\_core-scripts\profile-switcher\Switch-Hermes-Profile.ps1' -Action list -Json
 ```
 
 ---

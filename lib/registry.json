@@ -1,0 +1,14 @@
+﻿{
+    "profiles":  [
+                     {
+                         "description":  "JonBeatz Command Center",
+                         "name":  "jonbeatz",
+                         "location":  "D:\\Hermes\\jonbeatz"
+                     },
+                     {
+                         "description":  "MyStudioChannel Project",
+                         "name":  "msc",
+                         "location":  "D:\\Hermes\\msc"
+                     }
+                 ]
+}
