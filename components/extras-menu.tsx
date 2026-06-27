@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  CalendarDays,
   CircleStop,
   ExternalLink,
   KanbanSquare,
@@ -184,24 +183,6 @@ export function ExtrasMenu({ activeProfile }: Props) {
         >
           <CircleStop className="size-4 text-muted-foreground" />
           <span className="text-sm">Stop Kanban stack</span>
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          disabled
-          className="gap-3 py-2 text-muted-foreground"
-          onSelect={(e) => e.preventDefault()}
-        >
-          <CalendarDays className="size-4" />
-          <span className="flex flex-1 flex-col">
-            <span className="text-sm text-foreground">Postiz Calendar</span>
-            <span className="text-xs text-muted-foreground">
-              Schedule and publish content
-            </span>
-          </span>
-          <span className="eyebrow rounded-full border border-border px-1.5 py-0.5 text-[8px] text-muted-foreground">
-            Soon
-          </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
