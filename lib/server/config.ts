@@ -1,5 +1,5 @@
 // Server-only backend configuration. These paths mirror lib/settings.ts
-// defaults and point at the real Hermes profile-switcher + google-api stack.
+// defaults and point at the real Hermes profile-switcher + deepseek-api stack.
 // Override via environment variables if the layout ever moves.
 
 import path from 'node:path'
@@ -12,11 +12,11 @@ const SWITCHER_DIR = path.join(
   'profile-switcher',
 )
 
-const GOOGLE_API_DIR = path.join(
+const DEEPSEEK_API_DIR = path.join(
   HERMES_ROOT,
   'projects',
   '_core-scripts',
-  'google-api',
+  'deepseek-api',
 )
 
 // The Kanban/TaskBoard stack lives in the central _core-scripts folder.
@@ -34,16 +34,16 @@ export const SERVER_CONFIG = {
     path.join(SWITCHER_DIR, 'Switch-Hermes-Profile.ps1'),
   registryPath: path.join(SWITCHER_DIR, 'profiles.json'),
   googleApi: {
-    dir: GOOGLE_API_DIR,
-    scriptsDir: path.join(GOOGLE_API_DIR, 'scripts'),
-    start: path.join(GOOGLE_API_DIR, 'scripts', 'start-google-api-desktop.ps1'),
-    stop: path.join(GOOGLE_API_DIR, 'scripts', 'stop-google-api-desktop.ps1'),
+    dir: DEEPSEEK_API_DIR,
+    scriptsDir: path.join(DEEPSEEK_API_DIR, 'scripts'),
+    start: path.join(DEEPSEEK_API_DIR, 'scripts', 'start-deepseek.ps1'),
+    stop: path.join(DEEPSEEK_API_DIR, 'scripts', 'stop-deepseek.ps1'),
     restart: path.join(
-      GOOGLE_API_DIR,
+      DEEPSEEK_API_DIR,
       'scripts',
-      'restart-google-api-desktop.ps1',
+      'restart-deepseek.ps1',
     ),
-    envLocal: path.join(GOOGLE_API_DIR, '.env.local'),
+    envLocal: path.join(DEEPSEEK_API_DIR, '.env.local'),
     litellmPort: 4000,
     ngrokInspectorPort: 4040,
   },
