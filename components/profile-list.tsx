@@ -1,6 +1,6 @@
 'use client'
 
-import { FolderPlus, Plus, Sparkles } from 'lucide-react'
+import { FolderPlus, Plus, RefreshCw, Sparkles } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { ProfileCard } from '@/components/profile-card'
 import { Button } from '@/components/ui/button'
@@ -13,6 +13,8 @@ type Props = {
   onSwitch: (slug: string) => void
   onCreate: () => void
   onAdopt: () => void
+  onRepairCli?: () => void
+  repairingCli?: boolean
 }
 
 export function ProfileList({
@@ -22,9 +24,12 @@ export function ProfileList({
   onSwitch,
   onCreate,
   onAdopt,
+  onRepairCli,
+  repairingCli = false,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+  const missingCli = profiles.filter((p) => !p.cliProfile).length
 
   // Arrow-key navigation across the list.
   useEffect(() => {
@@ -80,6 +85,28 @@ export function ProfileList({
           </Button>
         </div>
       </header>
+
+      {missingCli > 0 && onRepairCli ? (
+        <div className="mx-4 mt-3 flex items-center justify-between gap-3 rounded-xl border border-gold/30 bg-gold/5 px-3 py-2">
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium text-gold">{missingCli}</span> profile
+            {missingCli === 1 ? '' : 's'} missing CLI home — scaffold + sync in
+            one click.
+          </p>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={repairingCli}
+            onClick={onRepairCli}
+            className="h-7 shrink-0 gap-1.5 border-gold/40 text-xs text-gold hover:bg-accent"
+          >
+            <RefreshCw
+              className={`size-3.5 ${repairingCli ? 'animate-spin' : ''}`}
+            />
+            Repair CLI
+          </Button>
+        </div>
+      ) : null}
 
       <div
         ref={containerRef}

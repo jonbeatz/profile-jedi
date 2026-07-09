@@ -289,7 +289,7 @@ export function ProfileDetail({
         <div className="mt-6">
           <CommandPreview command={command} />
           <p className="mt-2 text-[11px] text-faint">
-            Jedi transparency — this is the exact PowerShell the current action
+            Draven transparency — this is the exact PowerShell the current action
             will run.
           </p>
         </div>

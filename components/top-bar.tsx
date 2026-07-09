@@ -10,13 +10,23 @@ type Props = {
   onQueryChange: (q: string) => void
   onSearchFocus: () => void
   activeProfile: Profile | null
+  selectedProfile: Profile | null
   onOpenSettings: () => void
 }
 
 export const TopBar = forwardRef<HTMLInputElement, Props>(function TopBar(
-  { query, onQueryChange, onSearchFocus, activeProfile, onOpenSettings },
+  {
+    query,
+    onQueryChange,
+    onSearchFocus,
+    activeProfile,
+    selectedProfile,
+    onOpenSettings,
+  },
   ref,
 ) {
+  const extrasProfile = selectedProfile ?? activeProfile
+
   return (
     <header className="glass flex items-center gap-4 rounded-2xl px-4 py-3">
       {/* Wordmark */}
@@ -54,16 +64,30 @@ export const TopBar = forwardRef<HTMLInputElement, Props>(function TopBar(
 
       {/* Active profile capsule + settings */}
       <div className="flex shrink-0 items-center gap-2">
-        <div className="active-border active-bg flex items-center gap-2 rounded-full border px-3 py-1.5">
-          <span className="active-dot size-2 rounded-full" aria-hidden />
-          <span className="eyebrow text-[9px] text-muted-foreground">
-            Active
-          </span>
-          <span className="text-xs font-medium text-foreground">
-            {activeProfile?.name ?? 'None'}
-          </span>
+        <div
+          className="active-border active-bg flex max-w-[12rem] flex-col gap-0.5 rounded-xl border px-3 py-1.5"
+          title={
+            selectedProfile && !selectedProfile.active
+              ? `Browsing ${selectedProfile.name} — switch to make active`
+              : undefined
+          }
+        >
+          <div className="flex items-center gap-2">
+            <span className="active-dot size-2 shrink-0 rounded-full" aria-hidden />
+            <span className="eyebrow text-[9px] text-muted-foreground">
+              Active
+            </span>
+            <span className="truncate text-xs font-medium text-foreground">
+              {activeProfile?.name ?? 'None'}
+            </span>
+          </div>
+          {selectedProfile && !selectedProfile.active ? (
+            <span className="truncate pl-4 text-[10px] text-muted-foreground">
+              Viewing: {selectedProfile.name}
+            </span>
+          ) : null}
         </div>
-        <ExtrasMenu activeProfile={activeProfile} />
+        <ExtrasMenu toolsProfile={extrasProfile} />
         <button
           type="button"
           aria-label="Settings"

@@ -110,7 +110,7 @@ export const DEFAULT_SETTINGS: Settings = {
   },
 }
 
-export const APP_VERSION = '1.0.0'
+export const APP_VERSION = '1.1.0'
 export const HERMES_DESKTOP_VERSION = '0.9.4'
 
 /**

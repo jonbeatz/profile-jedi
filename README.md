@@ -1,7 +1,7 @@
 # Profile Jedi — Hermes Profile Switcher
 
 **A local-first control panel for managing Hermes AI-agent profiles.**  
-Switch, create, adopt, and launch self-contained agent workspaces from a premium Next.js dashboard — with full PowerShell backend transparency, service health monitoring, and tray-based lifecycle control.
+Switch, create, adopt, and launch self-contained agent workspaces from a premium Next.js dashboard — with full PowerShell backend transparency, DRAVEN service health monitoring, and tray-based lifecycle control.
 
 ![Profile Jedi — main dashboard](docs/screenshots/pj-dashboard-main.png)
 
@@ -13,7 +13,7 @@ Switch, create, adopt, and launch self-contained agent workspaces from a premium
 [![Cursor](https://img.shields.io/badge/Cursor-Agent_Ready-8E44AD?logo=cursor)](https://cursor.com/)
 [![Platform](https://img.shields.io/badge/Platform-Windows_10%2F11-0078D6?logo=windows)](https://github.com/jonbeatz/profile-jedi)
 [![Localhost Only](https://img.shields.io/badge/Security-127.0.0.1_only-green)](Hermes-Profile-Switcher.md)
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.0-blue)
 [![Release](https://img.shields.io/github/v/release/jonbeatz/profile-jedi?label=release)](https://github.com/jonbeatz/profile-jedi/releases/latest)
 
 ---
@@ -24,12 +24,12 @@ Switch, create, adopt, and launch self-contained agent workspaces from a premium
 
 | Metric | Value |
 |--------|-------|
-| **Version** | v1.0.0 ([Latest release](https://github.com/jonbeatz/profile-jedi/releases/latest)) |
+| **Version** | v1.1.0 ([Latest release](https://github.com/jonbeatz/profile-jedi/releases/latest)) |
 | **Stack** | Next.js 16 (App Router) · React 19 · TypeScript · Tailwind v4 · shadcn/Base UI · Motion · SWR |
 | **App URL** | `http://localhost:7780` (bound to `127.0.0.1` only) |
 | **Tray control** | `http://localhost:7781` (system tray supervisor) |
-| **Backend** | `Switch-Hermes-Profile.ps1` + Google API + Kanban stack scripts |
-| **API routes** | 15 Route Handlers for full local control |
+| **Backend** | `Switch-Hermes-Profile.ps1` + LiteLLM/ngrok probes + Kanban stack scripts |
+| **API routes** | 20+ Route Handlers for full local control |
 | **Status** | Production-ready for local desktop use |
 
 ---
@@ -37,16 +37,16 @@ Switch, create, adopt, and launch self-contained agent workspaces from a premium
 ## Screenshots
 
 ### Profile Command Center
-![Profile Jedi dashboard — profiles, detail panel, J.A.R.V.I.S. footer](docs/screenshots/pj-dashboard-main.png)
-*Known profiles sidebar, workspace/CLI/mem0 paths, quick actions, and live PowerShell command preview.*
+![Profile Jedi dashboard — profiles, detail panel, DRAVEN footer](docs/screenshots/pj-dashboard-main.png)
+*Known profiles sidebar, workspace/CLI/mem0 paths, quick actions, Repair CLI banner, and live PowerShell command preview.*
 
 ### Extras & TaskBoard Tools
 ![Profile Jedi Extras menu — TaskBoard, Kanban, Dashboard](docs/screenshots/pj-extras-menu.png)
-*Per-project TaskBoard deep-links, Hermes Kanban, Dashboard, and Kanban stack control.*
+*Per-project TaskBoard deep-links (selected profile), Hermes Kanban, Dashboard, and Kanban stack control.*
 
 ### Settings & Integrations
 ![Profile Jedi settings panel](docs/screenshots/pj-settings-panel.png)
-*Seven-section settings: General, Appearance, Console, Shortcuts, Integrations, Data, and Advanced.*
+*Seven-section settings: General (native folder picker), Appearance, DRAVEN Console, Shortcuts, Integrations, Data, and Advanced.*
 
 ### Command Palette
 ![Profile Jedi command palette Ctrl+K](docs/screenshots/pj-command-palette.png)
@@ -56,16 +56,18 @@ Switch, create, adopt, and launch self-contained agent workspaces from a premium
 
 ## Why Profile Jedi?
 
-Historically, Hermes profiles were switched from PowerShell. Profile Jedi wraps that engine in a **J.A.R.V.I.S.-style dashboard** so every action is point-and-click — while still showing the exact command that will run.
+Historically, Hermes profiles were switched from PowerShell. Profile Jedi wraps that engine in a **DRAVEN-style command dashboard** so every action is point-and-click — while still showing the exact command that will run.
 
 | Capability | Profile Jedi | Manual PowerShell |
 |------------|--------------|-------------------|
 | Profile list / switch / create / adopt / edit | Yes | Script flags only |
+| Bulk **Repair CLI** (scaffold + sync) | Yes | Per-profile only |
 | Live command preview + Dry-Run mode | Yes | No |
-| Google API stack (LiteLLM + ngrok) control | Yes | Separate scripts |
+| LiteLLM + ngrok health in DRAVEN footer | Yes | Manual port checks |
 | TaskBoardAI / Kanban per-project deep-links | Yes | Manual URLs |
-| Service health footer (TCP probes) | Yes | No |
+| Registry backup + restore | Yes | Manual file copy |
 | System tray Start / Stop / Restart | Yes | No |
+| Native Windows folder picker (settings) | Yes | No |
 | Settings panel (appearance, shortcuts, integrations) | Yes | No |
 | Agent-ready master documentation | Yes | README only |
 
@@ -96,7 +98,9 @@ Open **`http://localhost:7780`**.
 powershell -NoProfile -ExecutionPolicy Bypass -File .\create-profile-jedi-shortcuts.ps1 -Startup
 ```
 
-Creates **Profile Jedi**, **Stop Profile Jedi**, and **Profile Jedi Tray** on the Desktop; optional `-Startup` auto-launches the tray on login.
+Creates **Profile Jedi**, **Stop Profile Jedi**, and **Profile Jedi Tray** on the Desktop; `-Startup` auto-launches the tray on Windows login.
+
+`start-profile-jedi.ps1` also ensures the tray supervisor is running before the dev server starts.
 
 ### Verify
 
@@ -115,22 +119,23 @@ Profile Jedi (browser :7780)
 ├── Next.js Route Handlers     app/api/**  →  lib/server/*
 ├── Tray Supervisor (:7781)    profile-jedi-tray.ps1  (survives app stop)
 ├── PowerShell backend         Switch-Hermes-Profile.ps1
-├── Google API stack           LiteLLM :4000 · ngrok :4040
+├── LiteLLM + ngrok probes     :4000 / :4040 (DRAVEN footer capsules)
 └── Kanban stack               TaskBoardAI :3001 · Kanban :3005 · Dashboard :9119
 ```
 
-The browser never runs PowerShell directly. Route Handlers call `lib/server/ps.ts` (`execFile`, safe args). The tray supervisor on **7781** can restart the app after an in-app self-destruct on **7780**.
+The browser never runs PowerShell directly. Route Handlers call `lib/server/ps.ts` (`execFile`, safe args). Supervisor status is proxied through `/api/supervisor/*` so tray polling works whether you open `localhost` or `127.0.0.1`. The tray on **7781** can restart the app after an in-app self-destruct on **7780**.
 
 ---
 
-## Core Features (v1.0.0)
+## Core Features (v1.1.0)
 
 - **Profile management** — list, switch, create, adopt, edit (name / description / path / `boardId`)
+- **Repair CLI** — one-click scaffold + sync for all profiles missing CLI homes
 - **Quick actions** — Launch Hermes, Sync CLI, Open Folder, Reveal Shortcut, Edit in Cursor
-- **J.A.R.V.I.S. footer** — Google API control + service health capsules + app lifecycle cluster
+- **DRAVEN footer** — service health capsules (LiteLLM, ngrok, LM Studio, …) + app lifecycle cluster
 - **Extras menu** — TaskBoardAI (per-profile `boardId`), Hermes Kanban, Hermes Dashboard
-- **Settings** — General, Appearance, Console, Shortcuts, Integrations, Data, Advanced
-- **Lifecycle** — tray supervisor, desktop shortcuts, in-app Stop + Restart via supervisor
+- **Settings** — General (native folder picker), Appearance, Console, Shortcuts, Integrations, Data, Advanced
+- **Lifecycle** — tray supervisor, footer Start Tray, desktop shortcuts, in-app Stop + Restart
 - **Transparency** — command preview on every action; Dry-Run mode; last command output drawer
 
 ---
@@ -167,8 +172,8 @@ The browser never runs PowerShell directly. Route Handlers call `lib/server/ps.t
 | Variable | Default | Purpose |
 |----------|---------|---------|
 | `HERMES_ROOT` | `D:\Hermes` | Hermes install root |
-| `MSC_ROOT` | `D:\Cursor_Projectz\MyStudioChannel` | Kanban stack scripts |
 | `PJ_SWITCHER_SCRIPT` | `...\Switch-Hermes-Profile.ps1` | Profile engine path |
+| `PJ_TRAY_SCRIPT` | `...\profile-jedi-tray.ps1` | Tray supervisor script |
 | `PJ_EXEC_POLICY` | `Bypass` | PowerShell execution policy |
 
 ---
@@ -195,5 +200,5 @@ MIT © Jon Beatz
 ---
 
 <p align="center">
-  <sub>· Powered by the Hermes Profile Switcher · NovaMira Studio Gold aesthetic</sub>
+  <sub>· Powered by the Hermes Profile Switcher · NovaMira Studio Gold · DRAVEN fleet bridge</sub>
 </p>

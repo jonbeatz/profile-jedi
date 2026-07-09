@@ -172,20 +172,31 @@ export async function backupNow(): Promise<ActionResult> {
   return postJson<ActionResult>('/api/registry/backup')
 }
 
-export async function importRegistry(): Promise<ActionResult> {
-  return {
-    ok: false,
-    message:
-      'Import not available from the UI yet — restore a profiles.backup-*.json manually.',
-  }
+export async function restoreBackup(): Promise<ActionResult> {
+  return postJson<ActionResult>('/api/registry/restore')
 }
 
-export async function restoreBackup(): Promise<ActionResult> {
-  return {
-    ok: false,
-    message:
-      'Restore not available from the UI yet — copy a profiles.backup-*.json over profiles.json manually.',
-  }
+export async function importRegistry(): Promise<ActionResult> {
+  return postJson<ActionResult>('/api/system/open-registry-folder')
+}
+
+export async function repairAllCliProfiles(): Promise<ActionResult> {
+  return postJson<ActionResult>('/api/profiles/repair-cli')
+}
+
+export async function openHermesDataFolder(): Promise<ActionResult> {
+  return postJson<ActionResult>('/api/system/open-data-folder')
+}
+
+export async function pickFolder(body?: {
+  initialPath?: string
+  description?: string
+}): Promise<{ ok: boolean; cancelled?: boolean; path?: string | null }> {
+  return postJson('/api/system/pick-folder', body ?? {})
+}
+
+export async function enableTrayStartupOnLogin(): Promise<ActionResult> {
+  return postJson<ActionResult>('/api/system/tray-startup')
 }
 
 // --- Google API stack (LiteLLM + ngrok) ---

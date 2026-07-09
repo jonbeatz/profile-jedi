@@ -27,12 +27,26 @@ const KANBAN_ROOT = path.join(
   'kanban-stack',
 )
 
+const PROFILE_JEDI_ROOT =
+  process.env.PJ_APP_ROOT ?? path.join(HERMES_ROOT, 'apps', 'profile-jedi')
+
 export const SERVER_CONFIG = {
   hermesRoot: HERMES_ROOT,
+  profileJediRoot: PROFILE_JEDI_ROOT,
   switcherScript:
     process.env.PJ_SWITCHER_SCRIPT ??
     path.join(SWITCHER_DIR, 'Switch-Hermes-Profile.ps1'),
   registryPath: path.join(SWITCHER_DIR, 'profiles.json'),
+  registryDir: SWITCHER_DIR,
+  trayScript:
+    process.env.PJ_TRAY_SCRIPT ??
+    path.join(PROFILE_JEDI_ROOT, 'profile-jedi-tray.ps1'),
+  pickFolderScript:
+    process.env.PJ_PICK_FOLDER_SCRIPT ??
+    path.join(PROFILE_JEDI_ROOT, 'pick-folder.ps1'),
+  shortcutsScript:
+    process.env.PJ_SHORTCUTS_SCRIPT ??
+    path.join(PROFILE_JEDI_ROOT, 'create-profile-jedi-shortcuts.ps1'),
   googleApi: {
     dir: DEEPSEEK_API_DIR,
     scriptsDir: path.join(DEEPSEEK_API_DIR, 'scripts'),

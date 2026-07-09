@@ -8,7 +8,6 @@ import {
   Upload,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { GoogleApiCard } from '@/components/google-api-card'
 import { toast } from 'sonner'
 import {
   CopyableValue,
@@ -23,7 +22,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
-import { listProfiles, testBackend } from '@/lib/api'
+import { listProfiles, testBackend, backupNow, exportRegistry, importRegistry, restoreBackup, openHermesDataFolder, pickFolder, enableTrayStartupOnLogin } from '@/lib/api'
 import {
   ACCENT_PRESETS,
   adjustBrightness,
@@ -55,6 +54,22 @@ const MODEL_OPTIONS = [
 /* ----------------------------- GENERAL ----------------------------- */
 export function GeneralTab({ draft, setSection }: TabProps) {
   const g = draft.general
+
+  const browseDefaultLocation = async () => {
+    try {
+      const res = await pickFolder({
+        initialPath: g.defaultLocation,
+        description: 'Default location for new Hermes profiles',
+      })
+      if (res.cancelled) return
+      if (res.path) {
+        setSection('general', { defaultLocation: res.path })
+        toast.success('Default location updated')
+      }
+    } catch {
+      toast.error('Folder picker failed')
+    }
+  }
   return (
     <div className="space-y-3">
       <SectionHeader>General</SectionHeader>
@@ -73,8 +88,10 @@ export function GeneralTab({ draft, setSection }: TabProps) {
               className="bg-secondary/40 font-mono text-xs"
             />
             <Button
+              type="button"
               variant="outline"
               className="shrink-0 gap-1.5 border-border bg-secondary/40 hover:border-gold/30 hover:text-gold"
+              onClick={() => void browseDefaultLocation()}
             >
               <FolderOpen className="size-4" /> Browse
             </Button>
@@ -751,10 +768,10 @@ export function ConsoleTab({ draft, setSection }: TabProps) {
   const c = draft.console
   return (
     <div className="space-y-3">
-      <SectionHeader>J.A.R.V.I.S. Console</SectionHeader>
+      <SectionHeader>DRAVEN Console</SectionHeader>
       <SettingCard>
         <ToggleRow
-          label="Show J.A.R.V.I.S. Footer"
+          label="Show DRAVEN Footer"
           checked={c.showFooter}
           onChange={(v) => setSection('console', { showFooter: v })}
         />
@@ -827,8 +844,16 @@ export function ConsoleTab({ draft, setSection }: TabProps) {
         onChange={(services) => setSection('console', { services })}
       />
 
-      <SectionHeader>Google API Stack</SectionHeader>
-      <GoogleApiCard />
+      <SectionHeader>LiteLLM / ngrok</SectionHeader>
+      <SettingCard>
+        <p className="p-4 text-xs leading-relaxed text-muted-foreground">
+          LiteLLM (:4000) and ngrok (:4040) are managed by{' '}
+          <span className="font-mono text-foreground/80">Master-Startup</span> and
+          TaskBoard <span className="font-mono text-foreground/80">Fleet Health</span>.
+          Use service capsules in the DRAVEN footer for live probes — no separate
+          Google API control panel.
+        </p>
+      </SettingCard>
     </div>
   )
 }
@@ -949,6 +974,18 @@ export function IntegrationsTab({ draft, setSection, runAction }: TabProps) {
             }
           />
         </SettingRow>
+        <SettingRow
+          label="Tray auto-start on login"
+          helper="Installs Profile Jedi Tray in your Windows Startup folder."
+        >
+          <Button
+            variant="outline"
+            onClick={() => runAction(() => enableTrayStartupOnLogin())}
+            className="gap-1.5 border-border bg-secondary/40 hover:border-gold/30 hover:text-gold"
+          >
+            Install Startup Shortcut
+          </Button>
+        </SettingRow>
       </SettingCard>
     </div>
   )
@@ -997,49 +1034,24 @@ export function DataTab({
       <SettingCard>
         <div className="flex flex-wrap gap-2 p-4">
           <ActionButton
-            label="Import Registry"
-            onClick={() =>
-              runAction(async () => ({
-                ok: true,
-                message: 'Registry imported successfully',
-              }))
-            }
+            label="Open Registry Folder"
+            onClick={() => runAction(() => importRegistry())}
           />
           <ActionButton
             label="Export Registry"
-            onClick={() =>
-              runAction(async () => ({
-                ok: true,
-                message: 'Registry exported to profiles.backup.json',
-              }))
-            }
+            onClick={() => runAction(() => exportRegistry())}
           />
           <ActionButton
             label="Backup Now"
-            onClick={() =>
-              runAction(async () => ({
-                ok: true,
-                message: 'Snapshot saved (settings + registry)',
-              }))
-            }
+            onClick={() => runAction(() => backupNow())}
           />
           <ActionButton
             label="Restore from Backup"
-            onClick={() =>
-              runAction(async () => ({
-                ok: true,
-                message: 'Restored from latest backup',
-              }))
-            }
+            onClick={() => runAction(() => restoreBackup())}
           />
           <ActionButton
             label="Open App Data / Logs Folder"
-            onClick={() =>
-              runAction(async () => ({
-                ok: true,
-                message: 'Opening logs folder…',
-              }))
-            }
+            onClick={() => runAction(() => openHermesDataFolder())}
           />
         </div>
       </SettingCard>

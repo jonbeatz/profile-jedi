@@ -71,7 +71,16 @@ $listenerScript = {
         try {
             $path = $ctx.Request.Url.AbsolutePath.ToLower()
             $resp = $ctx.Response
-            $resp.AddHeader('Access-Control-Allow-Origin', "http://localhost:$($s.Port)")
+            $origin = [string]$ctx.Request.Headers['Origin']
+            $allowed = @(
+                "http://localhost:$($s.Port)"
+                "http://127.0.0.1:$($s.Port)"
+            )
+            if ($origin -and ($allowed -contains $origin)) {
+                $resp.AddHeader('Access-Control-Allow-Origin', $origin)
+            } else {
+                $resp.AddHeader('Access-Control-Allow-Origin', "http://localhost:$($s.Port)")
+            }
             $resp.AddHeader('Access-Control-Allow-Methods', 'GET, OPTIONS')
             $payload = '{"ok":true}'
 

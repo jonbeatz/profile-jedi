@@ -215,7 +215,8 @@ for reads.
 | `adopt -Location -Name -Description` | Adopt dialog | Registers an existing folder as a profile |
 | `update -Slug -Name -Description -BoardId [-Location]` | Edit dialog | Edits registry metadata; **slug never changes** |
 | `launch -Profile <slug>` | "Launch Hermes" | Runs that profile's desktop launcher |
-| `sync -Profile <slug>` | "Sync CLI Profile" | Re-syncs the CLI profile files |
+| `sync -Profile <slug>` | "Sync CLI Profile" | Scaffolds missing CLI files if needed, then re-syncs |
+| `repair-cli-all` | "Repair CLI" banner | Scaffolds + syncs every profile showing CLI missing |
 
 **Identity rule:** `slug` is the immutable key (used by CLI profile home and the
 mem0 collection). The UI only edits the **display name** to avoid orphaning
@@ -410,7 +411,7 @@ is hardcoded server-side; client defaults live in `DEFAULT_SETTINGS`.
 | Symptom | Cause / fix |
 |---------|-------------|
 | Red hydration error mentioning `webcrx` (or similar attr) | Browser extension mutates `<html>`. Already handled with `suppressHydrationWarning` on `<html>`/`<body>` in `layout.tsx`. Reload. |
-| Footer says "Tray off", Restart disabled | Tray supervisor not running. Launch **Profile Jedi Tray** shortcut. |
+| Footer says "Tray off", Restart disabled | Click the **tray icon** in the footer lifecycle cluster to spawn the supervisor, or launch **Profile Jedi Tray** from Desktop. |
 | `pnpm dev` won't spawn detached | Launcher goes through `cmd.exe /c pnpm dev` so the `.CMD` shim resolves; ensure pnpm/npm is on PATH. |
 | Tray won't bind 7781 | Another tray instance is running (single-instance guard), or run it with `-STA`. |
 | Google API stuck "starting" | Pending hint times out in ~30s; check LiteLLM on 4000 and ngrok on 4040. |

@@ -22,6 +22,7 @@ import {
   listProfiles,
   type ProfileAction,
   probeServices,
+  repairAllCliProfiles,
   runProfileAction,
   switchProfile,
   updateProfile,
@@ -60,6 +61,7 @@ export default function Page() {
   const [editOpen, setEditOpen] = useState(false)
   const [editProfile, setEditProfile] = useState<Profile | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [repairingCli, setRepairingCli] = useState(false)
   const searchRef = useRef<HTMLInputElement>(null)
 
   const activeProfile = useMemo(
@@ -171,6 +173,25 @@ export default function Page() {
     [mutateProfiles],
   )
 
+  const handleRepairCli = useCallback(async () => {
+    if (dryRun) {
+      toast.message('Dry-Run: Repair CLI', {
+        description:
+          '.\\Switch-Hermes-Profile.ps1 -Action repair-cli-all',
+      })
+      return
+    }
+    setRepairingCli(true)
+    try {
+      const res = await repairAllCliProfiles()
+      await mutateProfiles()
+      if (res.ok) toast.success(res.message)
+      else toast.error(res.message)
+    } finally {
+      setRepairingCli(false)
+    }
+  }, [dryRun, mutateProfiles])
+
   // Keyboard shortcuts driven by the configurable bindings in settings.
   useEffect(() => {
     const sc = settings.shortcuts
@@ -215,6 +236,7 @@ export default function Page() {
           onQueryChange={setQuery}
           onSearchFocus={() => {}}
           activeProfile={activeProfile}
+          selectedProfile={selectedProfile}
           onOpenSettings={() => setSettingsOpen(true)}
         />
 
@@ -229,6 +251,8 @@ export default function Page() {
               onSwitch={handleSwitch}
               onCreate={() => setCreateOpen(true)}
               onAdopt={() => setAdoptOpen(true)}
+              onRepairCli={handleRepairCli}
+              repairingCli={repairingCli}
             />
           </div>
           <div className="min-h-0">

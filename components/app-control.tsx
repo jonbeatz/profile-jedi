@@ -1,6 +1,6 @@
 'use client'
 
-import { Loader2, Power, RotateCw } from 'lucide-react'
+import { Loader2, Power, RotateCw, Server } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
@@ -9,6 +9,7 @@ import { StatusDot } from '@/components/status-dot'
 import {
   getSupervisorStatus,
   shutdownApp,
+  startTraySupervisor,
   supervisorRestart,
 } from '@/lib/supervisor'
 
@@ -22,9 +23,9 @@ const iconBtn =
  *   app going down; disabled when the supervisor isn't running.
  */
 export function AppControl() {
-  const { data: sup } = useSWR('supervisor-status', getSupervisorStatus, {
+  const { data: sup, mutate } = useSWR('supervisor-status', getSupervisorStatus, {
     refreshInterval: 8000,
-    revalidateOnFocus: false,
+    revalidateOnFocus: true,
   })
   const [confirm, setConfirm] = useState<'stop' | 'restart' | null>(null)
   const [busy, setBusy] = useState(false)
@@ -50,6 +51,23 @@ export function AppControl() {
         })
       } else {
         toast.error('Supervisor not reachable on port 7781')
+      }
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const doStartTray = async () => {
+    setBusy(true)
+    try {
+      const result = await startTraySupervisor()
+      await mutate()
+      if (result.ok) {
+        toast.success(result.message, {
+          description: 'Restart is now available after Stop.',
+        })
+      } else {
+        toast.error(result.message)
       }
     } finally {
       setBusy(false)
@@ -107,17 +125,25 @@ export function AppControl() {
 
       <button
         type="button"
-        onClick={() => setConfirm('restart')}
-        disabled={busy || !supervisorUp}
-        aria-label="Restart Profile Jedi via tray supervisor"
+        onClick={() => (supervisorUp ? setConfirm('restart') : void doStartTray())}
+        disabled={busy}
+        aria-label={
+          supervisorUp
+            ? 'Restart Profile Jedi via tray supervisor'
+            : 'Start tray supervisor'
+        }
         title={
           supervisorUp
             ? 'Restart via tray supervisor'
-            : 'Start the tray supervisor to enable restart'
+            : 'Start the tray supervisor (enables restart after stop)'
         }
         className={iconBtn}
       >
-        <RotateCw className="size-3.5" />
+        {supervisorUp ? (
+          <RotateCw className="size-3.5" />
+        ) : (
+          <Server className="size-3.5" />
+        )}
       </button>
 
       <ConfirmDialog

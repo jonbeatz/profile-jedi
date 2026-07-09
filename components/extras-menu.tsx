@@ -30,7 +30,8 @@ import {
 import type { Profile } from '@/lib/types'
 
 type Props = {
-  activeProfile: Profile | null
+  /** Selected profile in the sidebar, or active Hermes profile — drives TaskBoard deep-links. */
+  toolsProfile: Profile | null
 }
 
 const TOOLS: {
@@ -41,14 +42,14 @@ const TOOLS: {
 }[] = [
   {
     id: 'taskboard',
-    label: 'TaskBoard Manager',
-    description: "Open this project's board",
+    label: 'Fleet Command / TaskBoard',
+    description: 'Hermes fleet rollup + per-project boards',
     icon: LayoutGrid,
   },
   {
     id: 'kanban',
-    label: 'Hermes Kanban Board',
-    description: 'Drag-and-drop workflow board',
+    label: 'Hermes Kanban (:3005)',
+    description: 'Legacy workspace kanban (optional)',
     icon: KanbanSquare,
   },
   {
@@ -59,14 +60,15 @@ const TOOLS: {
   },
 ]
 
-export function ExtrasMenu({ activeProfile }: Props) {
+export function ExtrasMenu({ toolsProfile }: Props) {
   const [busy, setBusy] = useState(false)
   const { data: status } = useSWR('taskboard-status', getTaskboardStatus, {
     refreshInterval: 10000,
     revalidateOnFocus: false,
   })
 
-  const boardId = activeProfile?.boardId?.trim() || undefined
+  const boardId = toolsProfile?.boardId?.trim() || undefined
+  const profileLabel = toolsProfile?.name ?? 'No profile selected'
 
   const open = async (target: TaskboardTarget) => {
     setBusy(true)
@@ -79,7 +81,6 @@ export function ExtrasMenu({ activeProfile }: Props) {
         toast.message('Starting Kanban stack…', {
           description: 'Opening in a few seconds once it boots.',
         })
-        // Give the stack a moment to bind ports before opening the tab.
         setTimeout(() => window.open(res.url, '_blank', 'noopener'), 6000)
       } else {
         window.open(res.url, '_blank', 'noopener')
@@ -119,7 +120,8 @@ export function ExtrasMenu({ activeProfile }: Props) {
       <DropdownMenuContent align="end" className="w-72">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="eyebrow text-[10px] text-muted-foreground">
-            Tools · {activeProfile?.name ?? 'No active profile'}
+            Tools · {profileLabel}
+            {boardId ? ` · board ${boardId}` : ''}
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -131,6 +133,12 @@ export function ExtrasMenu({ activeProfile }: Props) {
             (tool.id === 'taskboard' && status?.taskboard) ||
             (tool.id === 'kanban' && status?.kanban) ||
             (tool.id === 'dashboard' && status?.dashboard)
+          const desc =
+            isBoard && boardId
+              ? `Opens ?board=${boardId} on :3001`
+              : isBoard && !boardId
+                ? 'No board id — opens Fleet Command home'
+                : tool.description
           return (
             <DropdownMenuItem
               key={tool.id}
@@ -144,11 +152,7 @@ export function ExtrasMenu({ activeProfile }: Props) {
               <Icon className="size-4 text-gold" />
               <span className="flex flex-1 flex-col">
                 <span className="text-sm text-foreground">{tool.label}</span>
-                <span className="text-xs text-muted-foreground">
-                  {isBoard && !boardId
-                    ? 'No board id set — opens default'
-                    : tool.description}
-                </span>
+                <span className="text-xs text-muted-foreground">{desc}</span>
               </span>
               {live ? (
                 <span className="size-1.5 rounded-full bg-success" />
@@ -159,7 +163,7 @@ export function ExtrasMenu({ activeProfile }: Props) {
           )
         })}
 
-        {isBoardHintNeeded(activeProfile) ? (
+        {isBoardHintNeeded(toolsProfile) ? (
           <DropdownMenuItem
             disabled
             className="gap-2 py-1.5 text-muted-foreground"

@@ -2,7 +2,6 @@
 
 import { FolderPlus, Plus, Repeat } from 'lucide-react'
 import { AppControl } from '@/components/app-control'
-import { GoogleApiControl } from '@/components/google-api-control'
 import { ServiceCapsule } from '@/components/service-capsule'
 import { useSettings } from '@/components/settings-provider'
 import { Waveform } from '@/components/waveform'
@@ -16,38 +15,32 @@ type Props = {
   onAdopt: () => void
 }
 
+/** Fleet footer — DRAVEN bridge + service probes + profile quick actions. */
 export function JarvisFooter({ services, onSwitch, onCreate, onAdopt }: Props) {
   const { settings } = useSettings()
   const c = settings.console
 
   return (
     <footer className="glass-strong flex flex-wrap items-center justify-between gap-4 rounded-2xl px-5 py-3">
-      {/* Left: waveform */}
       <div className="flex items-center gap-3">
         <Waveform active={c.waveformAnimation} color={c.waveformColor} />
         <span className="eyebrow font-mono text-[10px] text-gold">
-          J.A.R.V.I.S. Active
+          DRAVEN Active
         </span>
       </div>
 
-      {/* Center: service health — LiteLLM + ngrok are folded into the
-          interactive Google API cluster; remaining services stay as capsules. */}
       <div className="flex flex-wrap items-center justify-center gap-2">
         <AppControl />
-        <GoogleApiControl />
-        {services
-          .filter((s) => s.id !== 'litellm' && s.id !== 'ngrok')
-          .map((s) => (
-            <ServiceCapsule
-              key={s.id}
-              service={s}
-              showPort={c.showPorts}
-              style={c.capsuleStyle}
-            />
-          ))}
+        {services.map((s) => (
+          <ServiceCapsule
+            key={s.id}
+            service={s}
+            showPort={c.showPorts}
+            style={c.capsuleStyle}
+          />
+        ))}
       </div>
 
-      {/* Right: quick actions */}
       <div className="flex items-center gap-2">
         <Button
           variant="outline"
@@ -77,3 +70,6 @@ export function JarvisFooter({ services, onSwitch, onCreate, onAdopt }: Props) {
     </footer>
   )
 }
+
+/** @deprecated Use JarvisFooter — kept for imports during DRAVEN rebrand. */
+export const DravenFooter = JarvisFooter

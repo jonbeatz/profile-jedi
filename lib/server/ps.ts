@@ -34,6 +34,7 @@ export function runScript(
   scriptPath: string,
   args: string[] = [],
   label = scriptPath,
+  timeoutMs = 120_000,
 ): Promise<PsResult> {
   const fullArgs = [
     '-NoProfile',
@@ -48,7 +49,7 @@ export function runScript(
     execFile(
       'powershell.exe',
       fullArgs,
-      { windowsHide: true, maxBuffer: 10 * 1024 * 1024, timeout: 120_000 },
+      { windowsHide: true, maxBuffer: 10 * 1024 * 1024, timeout: timeoutMs },
       (error, stdout, stderr) => {
         const code =
           error && typeof (error as { code?: number }).code === 'number'
@@ -102,6 +103,48 @@ export function runCommand(
   })
 }
 
+/** Run a .ps1 file on an STA thread (WinForms dialogs, NotifyIcon). */
+export function runStaScript(
+  scriptPath: string,
+  args: string[] = [],
+  label = scriptPath,
+  timeoutMs = 120_000,
+): Promise<PsResult> {
+  const fullArgs = [
+    '-NoProfile',
+    '-NonInteractive',
+    '-ExecutionPolicy',
+    SERVER_CONFIG.executionPolicy,
+    '-STA',
+    '-File',
+    scriptPath,
+    ...args,
+  ]
+  return new Promise((resolve) => {
+    execFile(
+      'powershell.exe',
+      fullArgs,
+      { windowsHide: false, maxBuffer: 4 * 1024 * 1024, timeout: timeoutMs },
+      (error, stdout, stderr) => {
+        const code =
+          error && typeof (error as { code?: number }).code === 'number'
+            ? ((error as { code?: number }).code as number)
+            : error
+              ? 1
+              : 0
+        const res: PsResult = {
+          ok: code === 0,
+          code,
+          stdout: stdout ?? '',
+          stderr: stderr ?? '',
+        }
+        record(label, res)
+        resolve(res)
+      },
+    )
+  })
+}
+
 /**
  * Launch a long-lived .ps1 detached so it keeps running after the request
  * returns (used for the Google API start/restart, which hold LiteLLM open).
@@ -127,12 +170,39 @@ export function spawnDetached(scriptPath: string, label = scriptPath): void {
   })
 }
 
+/** Launch the tray supervisor (-STA required for WinForms NotifyIcon). */
+export function spawnTraySupervisor(): void {
+  const child = spawn(
+    'powershell.exe',
+    [
+      '-NoProfile',
+      '-ExecutionPolicy',
+      SERVER_CONFIG.executionPolicy,
+      '-STA',
+      '-File',
+      SERVER_CONFIG.trayScript,
+    ],
+    { detached: true, stdio: 'ignore', windowsHide: true },
+  )
+  child.unref()
+  record('spawn (tray supervisor)', {
+    ok: true,
+    code: 0,
+    stdout: `Spawned tray supervisor (pid ${child.pid ?? 'n/a'})`,
+    stderr: '',
+  })
+}
+
 /** Run the Switch-Hermes-Profile.ps1 with -Json and parse the result. */
-export async function runSwitcherJson<T>(args: string[]): Promise<T | null> {
+export async function runSwitcherJson<T>(
+  args: string[],
+  timeoutMs = 120_000,
+): Promise<T | null> {
   const res = await runScript(
     SERVER_CONFIG.switcherScript,
     [...args, '-Json'],
     `switcher ${args.join(' ')}`,
+    timeoutMs,
   )
   const text = res.stdout.trim()
   if (!text) return null

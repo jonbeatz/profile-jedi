@@ -33,7 +33,7 @@ export function Waveform({
     <div
       className="flex h-6 items-center gap-[3px]"
       role="img"
-      aria-label="J.A.R.V.I.S. voice activity"
+      aria-label="DRAVEN voice activity"
     >
       {BARS.map((peak, i) => (
         <motion.span
