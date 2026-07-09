@@ -1,0 +1,46 @@
+#!/bin/sh
+# Hermes secrets-scan pre-push — scans outgoing commits before GitHub push.
+# Catches history pushes (e.g. first push of a fork with old secret docs).
+
+. "$(dirname "$0")/_secrets-scan.sh"
+
+remote="$1"
+url="$2"
+fail=0
+
+scan_commit_range() {
+  range="$1"
+  [ -z "$range" ] && return 0
+
+  names=$(git diff --name-only "$range" 2>/dev/null)
+  scan_env_files "$names" "pre-push" || return 1
+  scan_names_forbidden "$names" "pre-push" || return 1
+
+  diff=$(git diff "$range" -U0 --no-color 2>/dev/null)
+  scan_diff_for_secrets "$diff" "pre-push" || return 1
+  return 0
+}
+
+while read local_ref local_sha remote_ref remote_sha
+do
+  if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+    continue
+  fi
+
+  if [ "$remote_sha" = "0000000000000000000000000000000000000000" ]; then
+    # New remote branch — scan every commit on the branch (first push).
+    for commit in $(git rev-list "$local_sha" 2>/dev/null); do
+      parent=$(git rev-parse "$commit^" 2>/dev/null) || parent=""
+      if [ -n "$parent" ]; then
+        scan_commit_range "$parent..$commit" || fail=1
+      else
+        scan_commit_range "$commit" || fail=1
+      fi
+    done
+  else
+    scan_commit_range "${remote_sha}..${local_sha}" || fail=1
+  fi
+done
+
+[ "$fail" -eq 0 ] || fail_hook
+exit 0

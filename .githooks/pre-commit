@@ -1,0 +1,17 @@
+#!/bin/sh
+# Hermes secrets-scan pre-commit — blocks commits with credentials or vault docs.
+# Activate: npm run git:hooks:install  (sets core.hooksPath = .githooks)
+
+. "$(dirname "$0")/_secrets-scan.sh"
+
+fail=0
+names=$(git diff --cached --name-only)
+
+scan_env_files "$names" "pre-commit" || fail=1
+scan_names_forbidden "$names" "pre-commit" || fail=1
+
+diff=$(git diff --cached -U0 --no-color)
+scan_diff_for_secrets "$diff" "pre-commit" || fail=1
+
+[ "$fail" -eq 0 ] || fail_hook
+exit 0
